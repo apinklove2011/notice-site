@@ -83,14 +83,13 @@ h1 {
   border: 1px solid #00d9ff;
 }
 
-.event-label {
+.schedule-mark {
   position: absolute;
   bottom: 5px;
-  left: 5px;
-  font-size: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
   color: #00ff99;
-  font-weight: bold;
-  line-height: 1.2;
 }
 
 .notice { border-bottom: 1px solid #333; padding: 15px 0; }
@@ -166,26 +165,26 @@ h1 {
 // 달력용 날짜
 let date = new Date();
 
-// 이벤트 데이터: 여러 이벤트를 배열로 넣어 한 날에 여러 라벨 가능
+// 이벤트 데이터: 한 날에 여러 스케줄 가능
 const events = {
   "2026-3-29": [
-    { title: "HOYTV 77 [더 멜로디오브 타임 - 세월여가]", time: "오후 10시 (KST)", place: "", label: "[방송]" }
+    { title: "HOYTV 77 [더 멜로디오브 타임 - 세월여가]", time: "오후 10시 (KST)", place: "" }
   ],
   "2026-4-4": [
-    { title: "Apink 8th CONCERT [The Origin : APINK] in Singapore", time: "오후 7시", place: "싱가포르 엑스포 @아레나", label: "[해외 공연]" }
+    { title: "Apink 8th CONCERT [The Origin : APINK] in Singapore", time: "오후 7시", place: "싱가포르 엑스포 @아레나" }
   ],
   "2026-4-11": [
-    { title: "Apink 8th CONCERT [The Origin : APINK] in KAOHSIUNG", time: "오후 6시", place: "대만 가오슝 뮤직 센터", label: "[해외 공연]" }
+    { title: "Apink 8th CONCERT [The Origin : APINK] in KAOHSIUNG", time: "오후 6시", place: "대만 가오슝 뮤직 센터" }
   ],
   "2026-4-18": [
-    { title: "🎉 정은지 솔로 데뷔 10주년 🎉", time: "", place: "", label: "[기념일]" }
+    { title: "🎉 정은지 솔로 데뷔 10주년 🎉", time: "", place: "" }
   ],
   "2026-4-19": [
-    { title: "🎉 에이핑크 데뷔 15주년 🎉", time: "", place: "", label: "[기념일]" },
-    { title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG", time: "오후 5시", place: "홍콩 AXA DREAMLAND, GO PARK", label: "[해외 공연]" }
+    { title: "🎉 에이핑크 데뷔 15주년 🎉", time: "", place: "" },
+    { title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG", time: "오후 5시", place: "홍콩 AXA DREAMLAND, GO PARK" }
   ],
   "2026-4-20": [
-    { title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG", time: "오후 8시", place: "홍콩 AXA DREAMLAND, GO PARK", label: "[해외 공연]" }
+    { title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG", time: "오후 8시", place: "홍콩 AXA DREAMLAND, GO PARK" }
   ]
 };
 
@@ -209,13 +208,12 @@ function renderCalendar() {
     const today = new Date();
     const isToday = i===today.getDate() && month===today.getMonth() && year===today.getFullYear();
     const key = `${year}-${month+1}-${i}`;
-    const dayEvents = events[key] || [];
+    const hasEvent = events[key] && events[key].length > 0;
 
-    // 여러 라벨 표시
-    let labels = dayEvents.map(ev => `<div class="event-label">${ev.label}</div>`).join("");
+    const mark = hasEvent ? `<div class="schedule-mark">●</div>` : "";
 
     calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}" onclick="showEvent(${year}, ${month+1}, ${i})">
-      ${i} ${labels}
+      ${i} ${mark}
     </div>`;
   }
 }
