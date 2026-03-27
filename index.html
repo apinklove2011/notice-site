@@ -75,6 +75,7 @@ h1 {
   border-radius: 8px;
   min-height: 60px;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .today {
@@ -84,6 +85,19 @@ h1 {
 .notice { border-bottom: 1px solid #333; padding: 15px 0; }
 .cheer { line-height: 1.8; }
 
+#eventDetail {
+  margin-top: 20px;
+  border-top: 1px solid #333;
+  padding-top: 15px;
+}
+#eventDetail button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: 1px solid #555;
+  background: none;
+  color: white;
+  cursor: pointer;
+}
 </style>
 </head>
 
@@ -114,6 +128,13 @@ h1 {
 
   <div id="calendar" class="grid"></div>
 
+  <!-- 스케줄 상세 -->
+  <div id="eventDetail" style="display:none;">
+    <h3>스케줄 상세</h3>
+    <div id="eventContent"></div>
+    <button onclick="closeEvent()">닫기</button>
+  </div>
+
 </div>
 
 <!-- 공지 -->
@@ -131,8 +152,19 @@ h1 {
 </div>
 
 <script>
+// 달력용 날짜
 let date = new Date();
 
+// 예시 스케줄 데이터
+const events = {
+  "2026-4-4": {
+    title: "Apink 8th CONCERT [The Origin : APINK] in Singapore",
+    time: "오후 7시",
+    place: "싱가포르 엑스포 @아레나"
+  }
+};
+
+// 달력 렌더링
 function renderCalendar() {
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -156,25 +188,44 @@ function renderCalendar() {
       month === today.getMonth() &&
       year === today.getFullYear();
 
-    calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}">${i}</div>`;
+    calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}" onclick="showEvent(${year}, ${month+1}, ${i})">${i}</div>`;
   }
 }
 
-function prevMonth(){
-  date.setMonth(date.getMonth() - 1);
-  renderCalendar();
-}
+// 이전/다음 달
+function prevMonth(){ date.setMonth(date.getMonth() - 1); renderCalendar(); }
+function nextMonth(){ date.setMonth(date.getMonth() + 1); renderCalendar(); }
 
-function nextMonth(){
-  date.setMonth(date.getMonth() + 1);
-  renderCalendar();
-}
-
+// 섹션 전환
 function show(section){
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
   document.getElementById(section).classList.add('active');
 }
 
+// 이벤트 보여주기
+function showEvent(y, m, d){
+  const key = `${y}-${m}-${d}`;
+  const event = events[key];
+
+  if(event){
+    document.getElementById("eventContent").innerHTML = `
+      <strong>${event.title}</strong><br>
+      시간: ${event.time}<br>
+      장소: ${event.place}
+    `;
+  } else {
+    document.getElementById("eventContent").innerHTML = "등록된 스케줄이 없습니다.";
+  }
+
+  document.getElementById("eventDetail").style.display = "block";
+}
+
+// 상세창 닫기
+function closeEvent(){
+  document.getElementById("eventDetail").style.display = "none";
+}
+
+// 초기 렌더링
 renderCalendar();
 </script>
 
