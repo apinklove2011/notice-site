@@ -83,22 +83,19 @@ h1 {
   border: 1px solid #00d9ff;
 }
 
-.schedule-label {
+/* 스케줄 점 */
+.schedule-dot {
   position: absolute;
   bottom: 5px;
-  left: 5px;
-  font-size: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
   font-weight: bold;
-  padding: 1px 3px;
-  border-radius: 3px;
-  color: #fff;
-  margin-top: 2px;
 }
 
-/* 라벨 색상 */
-.label-broadcast { background: #ff6347; }   /* 방송 - 빨강 */
-.label-overseas { background: #00bfff; }    /* 해외공연 - 파랑 */
-.label-anniversary { background: #32cd32; } /* 기념일 - 초록 */
+.dot-broadcast { color: #ff6347; }   /* 방송 - 빨강 */
+.dot-overseas { color: #00bfff; }    /* 해외공연 - 파랑 */
+.dot-anniversary { color: #32cd32; } /* 기념일 - 초록 */
 
 .notice-item {
   border-bottom: 1px solid #333;
@@ -243,17 +240,17 @@ function renderCalendar() {
     const key = `${year}-${month+1}-${i}`;
     const dayEvents = events[key] || [];
 
-    // 여러 스케줄 라벨 표시
-    let labelsHTML = dayEvents.map(ev => {
+    // 점 표시
+    let dotsHTML = dayEvents.map(ev => {
       let cls = '';
-      if(ev.label === 'broadcast') cls = 'label-broadcast';
-      if(ev.label === 'overseas') cls = 'label-overseas';
-      if(ev.label === 'anniversary') cls = 'label-anniversary';
-      return `<div class="schedule-label ${cls}">${ev.label.replace('_',' ')}</div>`;
+      if(ev.label === 'broadcast') cls = 'dot-broadcast';
+      if(ev.label === 'overseas') cls = 'dot-overseas';
+      if(ev.label === 'anniversary') cls = 'dot-anniversary';
+      return `<span class="schedule-dot ${cls}">●</span>`;
     }).join("");
 
     calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}" onclick="showEvent(${year}, ${month+1}, ${i})">
-      ${i} ${labelsHTML}
+      ${i} ${dotsHTML}
     </div>`;
   }
 }
