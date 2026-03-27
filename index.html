@@ -76,10 +76,20 @@ h1 {
   min-height: 60px;
   font-size: 12px;
   cursor: pointer;
+  position: relative;
 }
 
 .today {
   border: 1px solid #00d9ff;
+}
+
+.event-label {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  font-size: 10px;
+  color: #00ff99;
+  font-weight: bold;
 }
 
 .notice { border-bottom: 1px solid #333; padding: 15px 0; }
@@ -156,11 +166,13 @@ h1 {
 let date = new Date();
 
 // 예시 스케줄 데이터
+// key: "연-월-일"
 const events = {
   "2026-4-4": {
     title: "Apink 8th CONCERT [The Origin : APINK] in Singapore",
     time: "오후 7시",
-    place: "싱가포르 엑스포 @아레나"
+    place: "싱가포르 엑스포 @아레나",
+    label: "[해외 공연]"
   }
 };
 
@@ -177,10 +189,12 @@ function renderCalendar() {
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
 
+  // 빈칸 채우기
   for(let i=0;i<firstDay;i++){
     calendar.innerHTML += `<div></div>`;
   }
 
+  // 날짜 생성
   for(let i=1;i<=lastDate;i++){
     const today = new Date();
     let isToday =
@@ -188,7 +202,13 @@ function renderCalendar() {
       month === today.getMonth() &&
       year === today.getFullYear();
 
-    calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}" onclick="showEvent(${year}, ${month+1}, ${i})">${i}</div>`;
+    const key = `${year}-${month+1}-${i}`;
+    const event = events[key];
+    const label = event ? `<div class="event-label">${event.label}</div>` : "";
+
+    calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}" onclick="showEvent(${year}, ${month+1}, ${i})">
+      ${i} ${label}
+    </div>`;
   }
 }
 
