@@ -133,6 +133,10 @@ h1 {
 <script>
 let date = new Date();
 
+  "2026-4-04": {
+    title: "해외공연",
+    detail: "Apink 8th CONCERT [The Origin : APINK] in Singapore / 오후 7시 / 싱가포르 아레나 @엑스포"
+    
 function renderCalendar() {
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -176,6 +180,15 @@ function show(section){
 }
 
 renderCalendar();
+  let key = `${year}-${month+1}-${i}`;
+let hasSchedule = schedules[key];
+
+calendar.innerHTML += `
+  <div class="day ${isToday ? 'today' : ''}" onclick="showDetail('${key}')">
+    ${i}
+    ${hasSchedule ? `<br><span>${hasSchedule.title}</span>` : ""}
+  </div>
+`;
 </script>
 
 </body>
