@@ -90,6 +90,7 @@ h1 {
   font-size: 10px;
   color: #00ff99;
   font-weight: bold;
+  line-height: 1.2;
 }
 
 .notice { border-bottom: 1px solid #333; padding: 15px 0; }
@@ -165,45 +166,33 @@ h1 {
 // 달력용 날짜
 let date = new Date();
 
-// 스케줄 데이터
+// 이벤트 데이터: 여러 이벤트를 배열로 넣어 한 날에 여러 라벨 가능
 const events = {
-  "2026-3-29": {
-    title: "HOYTV 77 [더 멜로디오브 타임 - 세월여가]",
-    time: "오후 10시 (KST)",
-    place: "",
-    label: "[방송]"
-  },
-  "2026-4-4": {
-    title: "Apink 8th CONCERT [The Origin : APINK] in Singapore",
-    time: "오후 7시",
-    place: "싱가포르 엑스포 @아레나",
-    label: "[해외 공연]"
-  },
-  "2026-4-11": {
-    title: "Apink 8th CONCERT [The Origin : APINK] in KAOHSIUNG",
-    time: "오후 6시",
-    place: "대만 가오슝 뮤직 센터",
-    label: "[해외 공연]"
-  },
-  "2026-4-19": {
-    title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG",
-    time: "오후 5시",
-    place: "홍콩 AXA DREAMLAND, GO PARK",
-    label: "[해외 공연]"
-  },
-  "2026-4-20": {
-    title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG",
-    time: "오후 8시",
-    place: "홍콩 AXA DREAMLAND, GO PARK",
-    label: "[해외 공연]"
-  }
+  "2026-3-29": [
+    { title: "HOYTV 77 [더 멜로디오브 타임 - 세월여가]", time: "오후 10시 (KST)", place: "", label: "[방송]" }
+  ],
+  "2026-4-4": [
+    { title: "Apink 8th CONCERT [The Origin : APINK] in Singapore", time: "오후 7시", place: "싱가포르 엑스포 @아레나", label: "[해외 공연]" }
+  ],
+  "2026-4-11": [
+    { title: "Apink 8th CONCERT [The Origin : APINK] in KAOHSIUNG", time: "오후 6시", place: "대만 가오슝 뮤직 센터", label: "[해외 공연]" }
+  ],
+  "2026-4-18": [
+    { title: "🎉 정은지 솔로 데뷔 10주년 🎉", time: "", place: "", label: "[기념일]" }
+  ],
+  "2026-4-19": [
+    { title: "🎉 에이핑크 데뷔 15주년 🎉", time: "", place: "", label: "[기념일]" },
+    { title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG", time: "오후 5시", place: "홍콩 AXA DREAMLAND, GO PARK", label: "[해외 공연]" }
+  ],
+  "2026-4-20": [
+    { title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG", time: "오후 8시", place: "홍콩 AXA DREAMLAND, GO PARK", label: "[해외 공연]" }
+  ]
 };
 
 // 달력 렌더링
 function renderCalendar() {
   const year = date.getFullYear();
   const month = date.getMonth();
-
   document.getElementById("monthTitle").innerText = `${year}년 ${month+1}월`;
 
   const firstDay = new Date(year, month, 1).getDay();
@@ -212,25 +201,21 @@ function renderCalendar() {
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
 
-  // 빈칸
   for(let i=0;i<firstDay;i++){
     calendar.innerHTML += `<div></div>`;
   }
 
-  // 날짜 생성
   for(let i=1;i<=lastDate;i++){
     const today = new Date();
-    let isToday =
-      i === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear();
-
+    const isToday = i===today.getDate() && month===today.getMonth() && year===today.getFullYear();
     const key = `${year}-${month+1}-${i}`;
-    const event = events[key];
-    const label = event ? `<div class="event-label">${event.label}</div>` : "";
+    const dayEvents = events[key] || [];
+
+    // 여러 라벨 표시
+    let labels = dayEvents.map(ev => `<div class="event-label">${ev.label}</div>`).join("");
 
     calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}" onclick="showEvent(${year}, ${month+1}, ${i})">
-      ${i} ${label}
+      ${i} ${labels}
     </div>`;
   }
 }
@@ -245,17 +230,18 @@ function show(section){
   document.getElementById(section).classList.add('active');
 }
 
-// 이벤트 보여주기
+// 이벤트 상세보기
 function showEvent(y, m, d){
   const key = `${y}-${m}-${d}`;
-  const event = events[key];
+  const dayEvents = events[key] || [];
 
-  if(event){
-    document.getElementById("eventContent").innerHTML = `
-      <strong>${event.title}</strong><br>
-      시간: ${event.time}<br>
-      ${event.place ? `장소: ${event.place}` : ""}
-    `;
+  if(dayEvents.length > 0){
+    document.getElementById("eventContent").innerHTML = dayEvents.map(ev => `
+      <strong>${ev.title}</strong><br>
+      ${ev.time ? `시간: ${ev.time}<br>` : ""}
+      ${ev.place ? `장소: ${ev.place}` : ""}
+      <hr style="border-color:#555;">
+    `).join("");
   } else {
     document.getElementById("eventContent").innerHTML = "등록된 스케줄이 없습니다.";
   }
