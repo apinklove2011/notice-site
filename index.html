@@ -50,13 +50,15 @@ h1 {
   display: block;
 }
 
-/* 공지 */
-.notice {
-  border-bottom: 1px solid #333;
-  padding: 15px 0;
+/* 캘린더 */
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #aaa;
 }
 
-/* 캘린더 */
 .grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -68,11 +70,19 @@ h1 {
   padding: 10px;
   border-radius: 8px;
   font-size: 12px;
+  min-height: 60px;
 }
 
 .day span {
   display: block;
   color: #00d9ff;
+  margin-top: 5px;
+}
+
+/* 공지 */
+.notice {
+  border-bottom: 1px solid #333;
+  padding: 15px 0;
 }
 
 /* 응원법 */
@@ -99,7 +109,16 @@ h1 {
 <!-- 스케줄 -->
 <div id="schedule" class="section active">
   <h2>📅 SCHEDULE</h2>
+
+  <!-- 요일 -->
+  <div class="week">
+    <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+  </div>
+
+  <!-- 날짜 -->
   <div class="grid">
+
+    <!-- 1~7 -->
     <div class="day">1</div>
     <div class="day">2<span>촬영</span></div>
     <div class="day">3</div>
@@ -107,6 +126,39 @@ h1 {
     <div class="day">5</div>
     <div class="day">6</div>
     <div class="day">7</div>
+
+    <!-- 8~14 -->
+    <div class="day">8</div>
+    <div class="day">9</div>
+    <div class="day">10<span>녹음</span></div>
+    <div class="day">11</div>
+    <div class="day">12</div>
+    <div class="day">13</div>
+    <div class="day">14</div>
+
+    <!-- 15~21 -->
+    <div class="day">15</div>
+    <div class="day">16</div>
+    <div class="day">17<span>촬영</span></div>
+    <div class="day">18</div>
+    <div class="day">19</div>
+    <div class="day">20</div>
+    <div class="day">21</div>
+
+    <!-- 22~28 -->
+    <div class="day">22</div>
+    <div class="day">23</div>
+    <div class="day">24<span>콘서트</span></div>
+    <div class="day">25</div>
+    <div class="day">26</div>
+    <div class="day">27</div>
+    <div class="day">28</div>
+
+    <!-- 29~31 -->
+    <div class="day">29</div>
+    <div class="day">30</div>
+    <div class="day">31</div>
+
   </div>
 </div>
 
