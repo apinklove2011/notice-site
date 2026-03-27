@@ -165,13 +165,36 @@ h1 {
 // 달력용 날짜
 let date = new Date();
 
-// 예시 스케줄 데이터
-// key: "연-월-일"
+// 스케줄 데이터
 const events = {
+  "2026-3-29": {
+    title: "HOYTV 77 [더 멜로디오브 타임 - 세월여가]",
+    time: "오후 10시 (KST)",
+    place: "",
+    label: "[방송]"
+  },
   "2026-4-4": {
     title: "Apink 8th CONCERT [The Origin : APINK] in Singapore",
     time: "오후 7시",
     place: "싱가포르 엑스포 @아레나",
+    label: "[해외 공연]"
+  },
+  "2026-4-11": {
+    title: "Apink 8th CONCERT [The Origin : APINK] in KAOHSIUNG",
+    time: "오후 6시",
+    place: "대만 가오슝 뮤직 센터",
+    label: "[해외 공연]"
+  },
+  "2026-4-19": {
+    title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG",
+    time: "오후 5시",
+    place: "홍콩 AXA DREAMLAND, GO PARK",
+    label: "[해외 공연]"
+  },
+  "2026-4-20": {
+    title: "Apink 8th CONCERT [The Origin : APINK] in HONGKONG",
+    time: "오후 8시",
+    place: "홍콩 AXA DREAMLAND, GO PARK",
     label: "[해외 공연]"
   }
 };
@@ -189,7 +212,7 @@ function renderCalendar() {
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
 
-  // 빈칸 채우기
+  // 빈칸
   for(let i=0;i<firstDay;i++){
     calendar.innerHTML += `<div></div>`;
   }
@@ -231,7 +254,7 @@ function showEvent(y, m, d){
     document.getElementById("eventContent").innerHTML = `
       <strong>${event.title}</strong><br>
       시간: ${event.time}<br>
-      장소: ${event.place}
+      ${event.place ? `장소: ${event.place}` : ""}
     `;
   } else {
     document.getElementById("eventContent").innerHTML = "등록된 스케줄이 없습니다.";
