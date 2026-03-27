@@ -85,17 +85,28 @@ h1 {
 
 /* 스케줄 점 */
 .schedule-dot {
-  position: absolute;
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 14px;
-  font-weight: bold;
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-bottom: 2px;
 }
 
-.dot-broadcast { color: #ff6347; }   /* 방송 - 빨강 */
-.dot-overseas { color: #00bfff; }    /* 해외공연 - 파랑 */
-.dot-anniversary { color: #32cd32; } /* 기념일 - 초록 */
+.dot-broadcast { background-color: #ff6347; }   /* 방송 - 빨강 */
+.dot-overseas { background-color: #00bfff; }    /* 해외공연 - 파랑 */
+.dot-anniversary { background-color: #32cd32; } /* 기념일 - 초록 */
+
+.dots-container {
+  position: absolute;
+  bottom: 5px;
+  left: 5px; /* 왼쪽 정렬 */
+  display: flex;
+  flex-direction: column; /* 위로 쌓이도록 */
+}
+
+/* 스케줄 상세 */
+#eventContent .title { font-weight: bold; font-size: 10pt; margin-bottom: 3px; }
+#eventContent .time, #eventContent .place { font-size: 7pt; margin-bottom: 2px; }
 
 .notice-item {
   border-bottom: 1px solid #333;
@@ -195,8 +206,17 @@ h1 {
 // 달력용 날짜
 let date = new Date();
 
-// 이벤트 데이터: 라벨 포함
+// 이벤트 데이터
 const events = {
+  "2026-3-7": [
+    { title: "Apink 8th CONCERT [The Origin : APINK] in TAIPEI", time: "오후 6시", place: "대만 타이베이 TICC", label: "overseas" }
+  ],
+  "2026-3-21": [
+    { title: "Apink 8th CONCERT [The Origin : APINK] in MACAU", time: "오후 5시", place: "마카오 BROADWAY THEATRE, BROADWAY MACAU", label: "overseas" }
+  ],
+  "2026-3-22": [
+    { title: "Apink 8th CONCERT [The Origin : APINK] in MACAU", time: "오후 5시", place: "마카오 BROADWAY THEATRE, BROADWAY MACAU", label: "overseas" }
+  ],
   "2026-3-29": [
     { title: "HOYTV 77 [더 멜로디오브 타임 - 세월여가]", time: "오후 10시 (KST)", place: "", label: "broadcast" }
   ],
@@ -241,13 +261,18 @@ function renderCalendar() {
     const dayEvents = events[key] || [];
 
     // 점 표시
-    let dotsHTML = dayEvents.map(ev => {
-      let cls = '';
-      if(ev.label === 'broadcast') cls = 'dot-broadcast';
-      if(ev.label === 'overseas') cls = 'dot-overseas';
-      if(ev.label === 'anniversary') cls = 'dot-anniversary';
-      return `<span class="schedule-dot ${cls}">●</span>`;
-    }).join("");
+    let dotsHTML = "";
+    if(dayEvents.length > 0){
+      dotsHTML = '<div class="dots-container">';
+      dayEvents.forEach(ev => {
+        let cls = '';
+        if(ev.label === 'broadcast') cls = 'dot-broadcast';
+        if(ev.label === 'overseas') cls = 'dot-overseas';
+        if(ev.label === 'anniversary') cls = 'dot-anniversary';
+        dotsHTML += `<span class="schedule-dot ${cls}"></span>`;
+      });
+      dotsHTML += '</div>';
+    }
 
     calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}" onclick="showEvent(${year}, ${month+1}, ${i})">
       ${i} ${dotsHTML}
@@ -272,9 +297,9 @@ function showEvent(y, m, d){
 
   if(dayEvents.length > 0){
     document.getElementById("eventContent").innerHTML = dayEvents.map(ev => `
-      <strong>${ev.title}</strong><br>
-      ${ev.time ? `시간: ${ev.time}<br>` : ""}
-      ${ev.place ? `장소: ${ev.place}` : ""}
+      <div class="title">${ev.title}</div>
+      ${ev.time ? `<div class="time">시간: ${ev.time}</div>` : ""}
+      ${ev.place ? `<div class="place">장소: ${ev.place}</div>` : ""}
       <hr style="border-color:#555;">
     `).join("");
   } else {
