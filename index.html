@@ -38,25 +38,29 @@ h1 {
   cursor: pointer;
 }
 
-.menu button:hover {
-  background: #222;
+.section { display: none; }
+.section.active { display: block; }
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.section {
-  display: none;
+.calendar-header button {
+  background: none;
+  border: 1px solid #555;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
-.section.active {
-  display: block;
-}
-
-/* 캘린더 */
 .week {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 10px;
-  font-size: 12px;
   color: #aaa;
+  font-size: 12px;
 }
 
 .grid {
@@ -69,27 +73,16 @@ h1 {
   background: #111;
   padding: 10px;
   border-radius: 8px;
-  font-size: 12px;
   min-height: 60px;
+  font-size: 12px;
 }
 
-.day span {
-  display: block;
-  color: #00d9ff;
-  margin-top: 5px;
+.today {
+  border: 1px solid #00d9ff;
 }
 
-/* 공지 */
-.notice {
-  border-bottom: 1px solid #333;
-  padding: 15px 0;
-}
-
-/* 응원법 */
-.cheer {
-  line-height: 1.8;
-  font-size: 14px;
-}
+.notice { border-bottom: 1px solid #333; padding: 15px 0; }
+.cheer { line-height: 1.8; }
 
 </style>
 </head>
@@ -108,84 +101,81 @@ h1 {
 
 <!-- 스케줄 -->
 <div id="schedule" class="section active">
-  <h2>📅 SCHEDULE</h2>
 
-  <!-- 요일 -->
+  <div class="calendar-header">
+    <button onclick="prevMonth()">◀</button>
+    <h2 id="monthTitle"></h2>
+    <button onclick="nextMonth()">▶</button>
+  </div>
+
   <div class="week">
     <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
   </div>
 
-  <!-- 날짜 -->
-  <div class="grid">
+  <div id="calendar" class="grid"></div>
 
-    <!-- 1~7 -->
-    <div class="day">1</div>
-    <div class="day">2<span>촬영</span></div>
-    <div class="day">3</div>
-    <div class="day">4<span>팬미팅</span></div>
-    <div class="day">5</div>
-    <div class="day">6</div>
-    <div class="day">7</div>
-
-    <!-- 8~14 -->
-    <div class="day">8</div>
-    <div class="day">9</div>
-    <div class="day">10<span>녹음</span></div>
-    <div class="day">11</div>
-    <div class="day">12</div>
-    <div class="day">13</div>
-    <div class="day">14</div>
-
-    <!-- 15~21 -->
-    <div class="day">15</div>
-    <div class="day">16</div>
-    <div class="day">17<span>촬영</span></div>
-    <div class="day">18</div>
-    <div class="day">19</div>
-    <div class="day">20</div>
-    <div class="day">21</div>
-
-    <!-- 22~28 -->
-    <div class="day">22</div>
-    <div class="day">23</div>
-    <div class="day">24<span>콘서트</span></div>
-    <div class="day">25</div>
-    <div class="day">26</div>
-    <div class="day">27</div>
-    <div class="day">28</div>
-
-    <!-- 29~31 -->
-    <div class="day">29</div>
-    <div class="day">30</div>
-    <div class="day">31</div>
-
-  </div>
 </div>
 
 <!-- 공지 -->
 <div id="notice" class="section">
   <h2>📢 NOTICE</h2>
   <div class="notice">[공지] 새로운 프로젝트 안내</div>
-  <div class="notice">[안내] 일정 변경</div>
 </div>
 
 <!-- 응원법 -->
 <div id="cheer" class="section">
   <h2>🎤 응원법</h2>
-  <div class="cheer">
-    정! 은! 지!<br>
-    정! 은! 지!<br><br>
-    사랑해! 사랑해!
-  </div>
+  <div class="cheer">정! 은! 지!</div>
 </div>
 
 </div>
 
 <script>
-function show(section) {
+let date = new Date();
+
+function renderCalendar() {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  document.getElementById("monthTitle").innerText = `${year}년 ${month+1}월`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDate = new Date(year, month + 1, 0).getDate();
+
+  const calendar = document.getElementById("calendar");
+  calendar.innerHTML = "";
+
+  for(let i=0;i<firstDay;i++){
+    calendar.innerHTML += `<div></div>`;
+  }
+
+  for(let i=1;i<=lastDate;i++){
+    const today = new Date();
+    let isToday =
+      i === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear();
+
+    calendar.innerHTML += `<div class="day ${isToday ? 'today' : ''}">${i}</div>`;
+  }
+}
+
+function prevMonth(){
+  date.setMonth(date.getMonth() - 1);
+  renderCalendar();
+}
+
+function nextMonth(){
+  date.setMonth(date.getMonth() + 1);
+  renderCalendar();
+}
+
+function show(section){
   document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
   document.getElementById(section).classList.add('active');
 }
+
+renderCalendar();
 </script>
 
 </body>
